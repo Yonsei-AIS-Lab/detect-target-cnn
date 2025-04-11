@@ -1,0 +1,31 @@
+# General Settings
+project_name: "Model Training Framework"
+save_dir: "auto"
+prefix: "(TEST)"
+
+# Training Parameters
+training:
+  learning_rate_feat: 0.001
+  learning_rate_cls: 0.001
+  num_epochs: 20
+  optimizer: "adam"
+  weight_decay: 0.0001
+
+# Model Settings
+model:
+  type: "CNN"
+
+  name: "VGGNet16"
+  drop_out: 0.4
+  image_size: [3, 64, 64]
+  hidden_size: 1024
+  layer_depth: 4
+  num_classes: 2
+  is_pretrained: False
+
+# Dataset Settings
+dataset:
+  path_normal: "./dataset/normal"
+  path_target: "./dataset/target"
+  batch_size: 64
+  is_aug: False
