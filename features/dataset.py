@@ -52,9 +52,36 @@ class NormalTargetDataset(Dataset):
 
         return image, label
     
+class TargetOnlyDataset(Dataset):
+    def __init__(self, path_target, image_size=(224, 224)):
+        self.image_paths = []
+
+        for fname in os.listdir(path_target):
+            if fname.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                self.image_paths.append(os.path.join(path_target, fname))
+
+        transform_list = [transforms.Resize(image_size)]
+        transform_list += [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        ]
+
+        self.transform = transforms.Compose(transform_list)
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        img_path = self.image_paths[idx]
+        image = Image.open(img_path).convert('RGB')
+        image = self.transform(image)
+        label = 1
+
+        return image, label
 
 def create_dataloaders(path_normal, path_target, batch_size=32, image_size=(224, 224), augment=False, val_ratio=0.1):
     full_dataset = NormalTargetDataset(path_normal, path_target, image_size=image_size, augment=augment)
+    target_datset = TargetOnlyDataset(path_target, image_size=image_size)
 
     total_size = len(full_dataset)
     test_size = int(total_size * 0.1)
@@ -70,4 +97,4 @@ def create_dataloaders(path_normal, path_target, batch_size=32, image_size=(224,
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    return full_dataset, train_loader, val_loader, test_loader
+    return target_datset, train_loader, val_loader, test_loader

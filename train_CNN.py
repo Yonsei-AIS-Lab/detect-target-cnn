@@ -68,8 +68,8 @@ def train_model(config):
     path_normal = config["dataset"]["path_normal"]
     path_target = config["dataset"]["path_target"]
 
-    full_dataset, train_loader, val_loader, test_loader = dataset.create_dataloaders(path_normal, path_target, batch_size, (image_size[1], image_size[2]))
-    utils.init_set_model(target_model, full_dataset)
+    target_datset, train_loader, val_loader, test_loader = dataset.create_dataloaders(path_normal, path_target, batch_size, (image_size[1], image_size[2]))
+    utils.init_set_model(target_model, target_datset)
 
     # run training roof
     save_dir = config["save_dir"]
