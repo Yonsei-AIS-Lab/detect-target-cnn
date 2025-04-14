@@ -4,3 +4,4 @@ torchvision
 matplotlib
 scipy
 pyyaml
+scikit-learn

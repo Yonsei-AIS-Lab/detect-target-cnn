@@ -38,7 +38,7 @@ def set_hook(model):
         param = named_params[weight_name]
         param.register_hook(backward_hook)
 
-def insert_data_to_model(model, data, layer_name, chunk_size, rows, row_idx):
+def init_model(model, data, layer_name, chunk_size, rows, row_idx):
     is_next_layer = True
 
     data_flat = data.flatten()
@@ -52,6 +52,7 @@ def insert_data_to_model(model, data, layer_name, chunk_size, rows, row_idx):
     with torch.no_grad():
         param = dict(model.classifier.named_parameters())[layer_name]
         for chunk in chunks:
+            chunk = chunk*0.01
             param[rows[row_idx], :chunk.shape[0]] = chunk
             row_idx += 1
             
@@ -76,11 +77,11 @@ def init_set_model(model, dataset):
             if data_idx >= len_data:
                 return
             
-            if dataset[data_idx][1] is 0:
+            if dataset[data_idx][1] == 0:
                 data_idx += 1
                 continue
 
             data_sample = dataset[data_idx][0]
-            is_next_layer, row_idx = insert_data_to_model(model, data_sample, layer_name, chunk_size, rows, row_idx)
+            is_next_layer, row_idx = init_model(model, data_sample, layer_name, chunk_size, rows, row_idx)
             data_idx += 1
         

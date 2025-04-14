@@ -7,7 +7,7 @@ prefix: "(TEST)"
 training:
   learning_rate_feat: 0.001
   learning_rate_cls: 0.001
-  num_epochs: 20
+  num_epochs: 5
   optimizer: "adam"
   weight_decay: 0.0001
 
